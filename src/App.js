@@ -3,10 +3,10 @@ import { connect } from "react-redux";
 import { selectUserEntities, selectFilteredUsersId } from "./usersSlice";
 
 const App = ({ state }) => {
+  const closeDropdown = (event) => {
+    if (event.path[1].tagName !== "DIV") reset();
+  };
   useEffect(() => {
-    const closeDropdown = (event) => {
-      if (event.path[1].tagName !== "DIV") reset();
-    };
     document.addEventListener("click", closeDropdown);
     return () => document.removeEventListener("click", closeDropdown);
   }, []);
@@ -41,29 +41,34 @@ const App = ({ state }) => {
     }
   };
   return (
-    <form autoComplete="off" onSubmit={(e) => e.preventDefault()}>
-      <div onKeyDown={keydownHandler} className="autocomplete">
-        <input
-          id="myInput"
-          type="text"
-          name="name"
-          placeholder="Name"
-          onChange={changeHandler}
-          value={inputValue}
-        />
-        <div className="autocomplete-items">
-          {filteredUsersId.map((userId) => (
-            <div
-              onClick={() => clickHandler(userEntities[userId].name)}
-              key={userId}
-              className={activeUserId === userId ? "autocomplete-active" : ""}
-            >
-              {userEntities[userId].name}
-            </div>
-          ))}
+    <>
+      <h2>Autocomplete</h2>
+      <p>Start typing:</p>
+      <form autoComplete="off" onSubmit={(e) => e.preventDefault()}>
+        <div onKeyDown={keydownHandler} className="autocomplete">
+          <input
+            id="myInput"
+            type="text"
+            name="name"
+            placeholder="Name"
+            onChange={changeHandler}
+            value={inputValue}
+          />
+          <div className="autocomplete-items">
+            {filteredUsersId.map((userId) => (
+              <div
+                onClick={() => clickHandler(userEntities[userId].name)}
+                key={userId}
+                className={activeUserId === userId ? "autocomplete-active" : ""}
+              >
+                {userEntities[userId].name}
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-    </form>
+        <input type="submit" />
+      </form>
+    </>
   );
 };
 export default connect((state) => ({ state }))(App);
